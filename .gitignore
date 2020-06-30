@@ -3,3 +3,8 @@
 ################################################################################
 
 /.vs
+/Utils/bin
+/Utils/Framework2.0/obj
+/Utils/Standard2.0/obj
+/UtilsUnitTest/bin
+/UtilsUnitTest/obj
