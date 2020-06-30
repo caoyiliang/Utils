@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CUtils.Timer
+namespace Utils.Timer
 {
     public enum AverageTime : int
     {

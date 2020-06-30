@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CUtils
+namespace Utils
 {
     public static class CRC
     {

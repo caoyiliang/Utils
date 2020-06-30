@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
-using CUtils.Timer;
+using Utils.Timer;
 
 namespace UtilsUnitTest
 {

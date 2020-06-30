@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CUtils
+namespace Utils
 {
     public static class TaskUtils
     {

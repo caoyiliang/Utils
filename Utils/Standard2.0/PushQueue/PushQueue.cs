@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CUtils.PushQueue
+namespace Utils.PushQueue
 {
     public class PushQueue<T>
     {

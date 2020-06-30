@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace CUtils.PushQueue
+namespace Utils.PushQueue
 {
     [Serializable]
     internal class MaxCacheCountOutOfRangeException : Exception

@@ -1,4 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <Description>公共工具库</Description>
+    <PackageReleaseNotes>公共工具库</PackageReleaseNotes>
+    <PackageTags></PackageTags>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageId>CSoft.Utils</PackageId>
+    <Authors>CSoft</Authors>
+    <Company>CSoft</Company>
+    <RepositoryUrl>https://github.com/caoyiliang/Utils</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\bin\Release</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\bin\Debug</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Utils\Properties\**" />
+    <Compile Remove="Framework2.0\**" />
+    <EmbeddedResource Remove="Utils\Properties\**" />
+    <EmbeddedResource Remove="Framework2.0\**" />
+    <None Remove="Utils\Properties\**" />
+    <None Remove="Framework2.0\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Compile Include="..\CRC.cs" />
+    <Compile Include="..\RemainBytes.cs" />
+    <Compile Include="..\StringByteUtils.cs" />
+    <Compile Include="..\MD5.cs" />
+  </ItemGroup>
+
 </Project>

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CUtils;
+using Utils;
 namespace UtilsUnitTest
 {
     [TestClass]

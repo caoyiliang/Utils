@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CUtils
+namespace Utils
 {
     public class RemainBytes
     {
