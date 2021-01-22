@@ -3,20 +3,21 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.0</Version>
+    <Version>5.0.1</Version>
     <Description>公共工具库</Description>
     <PackageReleaseNotes>公共工具库</PackageReleaseNotes>
     <PackageTags></PackageTags>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>
     <Authors>CSoft</Authors>
     <Company>CSoft</Company>
     <RepositoryUrl>https://github.com/caoyiliang/Utils</RepositoryUrl>
+    <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\bin\Release</OutputPath>
+    <DocumentationFile>..\bin\Release\Utils.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,6 +31,10 @@
     <EmbeddedResource Remove="Framework2.0\**" />
     <None Remove="Utils\Properties\**" />
     <None Remove="Framework2.0\**" />
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
