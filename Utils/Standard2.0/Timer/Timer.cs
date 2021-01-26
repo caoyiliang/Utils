@@ -12,36 +12,41 @@ namespace Utils.Timer
         private Task _work;
         private TaskCompletionSource<bool> _stop;
         private volatile bool _alive;
+        private readonly int _offset;
+
         public event Action<DateTime> OnTime;
-        public Timer(AverageTime averageTime)
+        public Timer(AverageTime averageTime, int offset = 0)
         {
             _minutes = (int)averageTime;
+            _offset = offset;
         }
         public async Task StartAsync()
         {
             if (_alive) return;
             _alive = true;
             _stop = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var lastStartTime = DateTime.Now;
             _work = Task.Run(async () =>
             {
-                while (true)
+                while (!_stop.Task.IsCompleted)
                 {
                     var now = DateTime.Now;
-                    if ((now.Minute - 1 == -1 ? 59 : now.Minute - 1) % _minutes == 0)
+                    if (lastStartTime.Minute != now.Minute && now.Minute % _minutes == 0)
                     {
-                        try
+                        lastStartTime = now;
+                        _ = Task.Run(async () =>
                         {
-                            OnTime(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        if (await Task.WhenAny(Task.Delay(_minutes * 60 * 1000 - now.Second * 1000), _stop.Task) == _stop.Task) break;
+                            await Task.Delay(_offset);
+                            try
+                            {
+                                OnTime(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        });
                     }
-                    else
-                    {
-                        if (await Task.WhenAny(Task.Delay(900), _stop.Task) == _stop.Task) break;
-                    }
+                    if (await Task.WhenAny(Task.Delay(900), _stop.Task) == _stop.Task) break;
                 }
             });
         }
