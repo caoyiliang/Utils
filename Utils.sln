@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Standard2.0\Utils.csproj", "{93E3765B-B643-471E-8BED-5409ABA5608F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj", "{93E3765B-B643-471E-8BED-5409ABA5608F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilsUnitTest", "UtilsUnitTest\UtilsUnitTest.csproj", "{95D13914-11E6-4B67-9787-70FF3644AFD7}"
 EndProject

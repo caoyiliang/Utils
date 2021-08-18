@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+	<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.3</Version>
+    <Version>5.0.4</Version>
     <Description>公共工具库</Description>
     <PackageReleaseNotes>公共工具库</PackageReleaseNotes>
     <PackageTags></PackageTags>
@@ -12,7 +12,9 @@
     <Authors>CSoft</Authors>
     <Company>CSoft</Company>
     <RepositoryUrl>https://github.com/caoyiliang/Utils</RepositoryUrl>
+    <LangVersion>default</LangVersion>
     <PackageIcon>logo.png</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -25,28 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Utils\Properties\**" />
-    <Compile Remove="Framework2.0\**" />
-    <EmbeddedResource Remove="Utils\Properties\**" />
-    <EmbeddedResource Remove="Framework2.0\**" />
-    <None Remove="Utils\Properties\**" />
-    <None Remove="Framework2.0\**" />
-    <None Include="..\..\logo.png">
+    <None Include="..\logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-    <Compile Include="..\CRC.cs" />
-    <Compile Include="..\RemainBytes.cs" />
-    <Compile Include="..\StringByteUtils.cs" />
-    <Compile Include="..\MD5.cs" />
   </ItemGroup>
 
 </Project>
