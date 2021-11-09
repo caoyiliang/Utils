@@ -1,4 +1,3 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,7 +12,7 @@ namespace Utils
         {
             //就是比string往后一直加要好的优化容器
             StringBuilder sb = new StringBuilder();
-            using MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            using MD5CryptoServiceProvider md5 = new();
             //将输入字符串转换为字节数组并计算哈希。
             byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
             if (base64) return Convert.ToBase64String(data);

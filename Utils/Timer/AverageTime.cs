@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utils.Timer
+﻿namespace Utils.Timer
 {
     public enum AverageTime : int
     {

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+	<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>5.0.4</Version>
+    <Version>6.0.0</Version>
     <Description>公共工具库</Description>
     <PackageReleaseNotes>公共工具库</PackageReleaseNotes>
     <PackageTags></PackageTags>
@@ -15,6 +15,7 @@
     <LangVersion>default</LangVersion>
     <PackageIcon>logo.png</PackageIcon>
     <PackageIconUrl />
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

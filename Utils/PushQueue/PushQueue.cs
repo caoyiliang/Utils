@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
 namespace Utils.PushQueue
 {
@@ -34,9 +29,9 @@ namespace Utils.PushQueue
                             {
                                 await OnPushData(t);
                             }
-                            catch 
+                            catch
                             {
-                            
+
                             }
                     }
                     await Task.Delay(100);
