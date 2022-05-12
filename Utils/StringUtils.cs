@@ -9,10 +9,10 @@ namespace Utils
         public static List<decimal> GetAllNum(this string str)
         {
             var result = new List<decimal>();
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             foreach (var item in str)
             {
-                if (item.lsNum())
+                if (item.LsNum())
                 {
                     stringBuilder.Append(item);
                 }
@@ -41,7 +41,7 @@ namespace Utils
             }
             return result;
         }
-        private static bool lsNum(this char c)
+        private static bool LsNum(this char c)
         {
             return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '.';
         }
@@ -60,9 +60,9 @@ namespace Utils
         public static string ModelToUriParam(this object obj, bool sort = true, string url = "", bool urlEncode = false)
         {
             PropertyInfo[] propertis = obj.GetType().GetProperties();
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(url);
-            if (url != "") sb.Append("?");
+            if (url != "") sb.Append('?');
             if (sort) propertis = propertis.OrderBy(x => x.Name).ToArray();
             foreach (var p in propertis)
             {
@@ -71,9 +71,9 @@ namespace Utils
                     continue;
 
                 sb.Append(p.Name);
-                sb.Append("=");
+                sb.Append('=');
                 sb.Append(urlEncode ? HttpUtility.UrlEncode(v.ToString()) : v.ToString());
-                sb.Append("&");
+                sb.Append('&');
             }
             sb.Remove(sb.Length - 1, 1);
 

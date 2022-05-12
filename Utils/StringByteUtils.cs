@@ -15,12 +15,12 @@ namespace Utils
             {
                 return string.Empty;
             }
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < count; i++)
             {
                 string s = ByteToString(data[i]);
                 sb.Append(s);
-                if (i != count - 1) sb.Append(" ");
+                if (i != count - 1) sb.Append(' ');
             }
             return sb.ToString();
         }
@@ -42,7 +42,7 @@ namespace Utils
         /// <summary>合并任意个byte数组</summary>
         public static byte[] ComibeByteArray(params byte[][] bytes)
         {
-            byte[] rs = new byte[0];
+            byte[] rs = Array.Empty<byte>();
             foreach (byte[] item in bytes)
             {
                 byte[] temp = rs;
@@ -57,7 +57,7 @@ namespace Utils
         /// <summary>合并任意个byte数组</summary>
         public static byte[] ComibeByteArray(IEnumerable<byte[]> bytes)
         {
-            byte[] rs = new byte[0];
+            byte[] rs = Array.Empty<byte>();
             foreach (byte[] item in bytes)
             {
                 byte[] temp = rs;

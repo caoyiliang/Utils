@@ -17,7 +17,9 @@ namespace Utils
                 {
                     if (type.GetInterface(pluginName) != null)
                     {
-                        result.Add((T)Activator.CreateInstance(type));
+                        var instance = Activator.CreateInstance(type);
+                        if (instance is not null)
+                            result.Add((T)instance);
                     }
                 }
             }
@@ -27,7 +29,7 @@ namespace Utils
         //查找所有插件的路径
         private static List<string> FindPlugin(string pluginName)
         {
-            List<string> pluginPath = new List<string>();
+            var pluginPath = new List<string>();
             //获取程序的基目录
             string path = AppDomain.CurrentDomain.BaseDirectory;
             //合并路径，指向插件所在目录。

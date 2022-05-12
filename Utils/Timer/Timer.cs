@@ -2,13 +2,18 @@
 {
     public class Timer : ITimer
     {
-        private int _minutes;
-        private Task _work;
-        private TaskCompletionSource<bool> _stop;
+        private readonly int _minutes;
+        private Task? _work;
+        private TaskCompletionSource<bool>? _stop;
         private volatile bool _alive;
         private readonly int _offset;
 
-        public event Action<DateTime> OnTime;
+        public event Action<DateTime>? OnTime;
+        /// <summary>
+        /// 定时器
+        /// </summary>
+        /// <param name="averageTime"></param>
+        /// <param name="offset"></param>
         public Timer(AverageTime averageTime, int offset = 0)
         {
             _minutes = (int)averageTime;
@@ -31,25 +36,21 @@
                         _ = Task.Run(async () =>
                         {
                             await Task.Delay(_offset);
-                            try
-                            {
-                                OnTime(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
-                            }
-                            catch (Exception)
-                            {
-                            }
+                            OnTime?.Invoke(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
                         });
                     }
                     if (await Task.WhenAny(Task.Delay(900), _stop.Task) == _stop.Task) break;
                 }
             });
+            await Task.CompletedTask;
         }
 
         public async Task StopAsync()
         {
             if (!_alive) return;
-            _stop.TrySetResult(true);
-            await _work;
+            _stop?.TrySetResult(true);
+            if (_work is not null)
+                await _work;
             _alive = false;
         }
     }

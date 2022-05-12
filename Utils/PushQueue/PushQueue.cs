@@ -2,17 +2,28 @@
 
 namespace Utils.PushQueue
 {
+    /// <summary>
+    /// 队列
+    /// </summary>
+    /// <typeparam name="T">队列类型</typeparam>
     public class PushQueue<T>
     {
-        private ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+        private readonly ConcurrentQueue<T> _queue = new();
         private volatile bool _isActive = false;
-        private TaskCompletionSource<bool> _completeStop;
-        private CancellationTokenSource _cts;
+        private TaskCompletionSource<bool>? _completeStop;
+        private CancellationTokenSource? _cts;
         /// <summary>
         /// 最大缓存的数量
         /// </summary>
         public int MaxCacheCount { get; set; }
-        public event Func<T, Task> OnPushData;
+        /// <summary>
+        /// 队列推出事件
+        /// </summary>
+        public event Func<T, Task>? OnPushData;
+        /// <summary>
+        /// 启动队列
+        /// </summary>
+        /// <returns></returns>
         public async Task StartAsync()
         {
             if (_isActive) return;
@@ -22,23 +33,22 @@ namespace Utils.PushQueue
             {
                 while (!_cts.IsCancellationRequested)
                 {
-                    if (_queue.TryDequeue(out T t))
+                    if (_queue.TryDequeue(out var t))
                     {
-                        if (!(this.OnPushData is null))
-                            try
-                            {
-                                await OnPushData(t);
-                            }
-                            catch
-                            {
-
-                            }
+                        if (this.OnPushData is not null)
+                            await OnPushData(t);
                     }
                     await Task.Delay(100);
                 }
-                _completeStop.TrySetResult(true);
+                _completeStop?.TrySetResult(true);
             });
+            await Task.CompletedTask;
         }
+        /// <summary>
+        /// 加入队列
+        /// </summary>
+        /// <param name="t"></param>
+        /// <exception cref="MaxCacheCountOutOfRangeException"></exception>
         public void PutInData(T t)
         {
             if (_queue.Count > MaxCacheCount)
@@ -48,10 +58,10 @@ namespace Utils.PushQueue
         public async Task StopAsync()
         {
             if (!_isActive) return;
-            _isActive = false;
             _completeStop = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _cts.Cancel();
+            _cts?.Cancel();
             await _completeStop.Task;
+            _isActive = false;
         }
     }
 }

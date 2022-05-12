@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Utils
@@ -11,8 +10,8 @@ namespace Utils
         public static string GetMD5Hash(string str, bool base64 = true)
         {
             //就是比string往后一直加要好的优化容器
-            StringBuilder sb = new StringBuilder();
-            using MD5CryptoServiceProvider md5 = new();
+            StringBuilder sb = new();
+            var md5 = System.Security.Cryptography.MD5.Create();
             //将输入字符串转换为字节数组并计算哈希。
             byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
             if (base64) return Convert.ToBase64String(data);
@@ -30,7 +29,9 @@ namespace Utils
             }
         }
 
-        //验证
+        /// <summary>
+        /// 验证
+        /// </summary>
         public static bool VerifyMD5Hash(string str, string hash, bool base64 = true)
         {
             string hashOfInput = GetMD5Hash(str, base64);

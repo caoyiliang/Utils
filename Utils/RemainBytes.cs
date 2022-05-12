@@ -7,9 +7,9 @@
         private int _currentMessageLength = -1;
 
         // 下一个写入字节的位置
-        private int _nextIndex { get { return this.Count + StartIndex; } }
+        private int NextIndex { get { return this.Count + StartIndex; } }
         // 剩余的可用大小
-        private int _avaliableSize { get { return this.Bytes.Length - this.Count - StartIndex; } }
+        private int AvaliableSize { get { return this.Bytes.Length - this.Count - StartIndex; } }
 
         public byte[] Bytes { get; set; } = new byte[DEFAULT_SIZE];
 
@@ -54,13 +54,13 @@
             else
             {
                 // 检查并调整容量
-                if (_avaliableSize < size)
+                if (AvaliableSize < size)
                 {
                     this.AddArrayCapacity((int)((Capacity + size) * 1.5)); // 调整1.5倍
                 }
             }
             // 添加到Bytes中
-            Array.Copy(newBytes, startIndex, this.Bytes, _nextIndex, size);
+            Array.Copy(newBytes, startIndex, this.Bytes, NextIndex, size);
             this.Count += size;
         }
 
