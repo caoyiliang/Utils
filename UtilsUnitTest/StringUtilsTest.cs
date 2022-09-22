@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 using Utils;
 
 namespace UtilsUnitTest
@@ -16,6 +17,15 @@ namespace UtilsUnitTest
             {
                 Console.WriteLine(item);
             }
+            await Task.CompletedTask;
+        }
+
+        [TestMethod]
+        public async Task TestAes()
+        {
+            using var aes = new AES(Encoding.UTF8.GetBytes("sciencetechnolog"));
+            var a = aes.Encrypt("adfasdf");
+            var b = aes.Decrypt(a);
             await Task.CompletedTask;
         }
     }
