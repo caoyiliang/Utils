@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
 using System.Text;
 using Utils;
 
@@ -27,6 +28,18 @@ namespace UtilsUnitTest
             var a = aes.Encrypt("adfasdf");
             var b = aes.Decrypt(a);
             await Task.CompletedTask;
+        }
+
+        [TestMethod]
+        public async Task TestReTry()
+        {
+            await ProcessUtils.ReTry(async () => await TaskA(), 3, null);
+        }
+
+        private Task TaskA()
+        {
+            Debug.Write("A");
+            throw new Exception();
         }
     }
 }
