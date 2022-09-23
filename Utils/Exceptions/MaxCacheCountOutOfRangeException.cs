@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Utils.PushQueue
+namespace Utils.Exceptions
 {
     [Serializable]
     internal class MaxCacheCountOutOfRangeException : Exception
