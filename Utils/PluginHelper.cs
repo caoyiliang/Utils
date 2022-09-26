@@ -11,7 +11,7 @@ public static class PluginHelper
         var pluginPath = FindPlugin(pluginName);
         foreach (string fileName in pluginPath)
         {
-            Assembly asm = Assembly.LoadFile(fileName);
+            Assembly asm = Assembly.LoadFrom(fileName);
             Type[] t = asm.GetExportedTypes();
             foreach (Type type in t)
             {
