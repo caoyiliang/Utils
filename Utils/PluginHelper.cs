@@ -4,11 +4,11 @@ namespace Utils;
 
 public static class PluginHelper
 {
-    public static List<Type> GetChildren<T>()
+    public static List<Type> GetChildren<T>(string? path = null)
     {
         var result = new List<Type>();
         var pluginName = typeof(T).Name;
-        var pluginPath = FindPlugin(pluginName);
+        var pluginPath = FindPlugin(path ?? pluginName);
         foreach (string fileName in pluginPath)
         {
             Assembly asm = Assembly.LoadFrom(fileName);
