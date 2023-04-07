@@ -11,7 +11,7 @@ public class PushQueue<T>
 {
     private readonly ConcurrentQueue<T> _queue = new();
     private volatile bool _isActive = false;
-    private TaskCompletionSource<bool>? _completeStop;
+    private Task? _task;
     private CancellationTokenSource? _cts;
     /// <summary>
     /// 最大缓存的数量
@@ -24,13 +24,12 @@ public class PushQueue<T>
     /// <summary>
     /// 启动队列
     /// </summary>
-    /// <returns></returns>
     public async Task StartAsync()
     {
         if (_isActive) return;
         _isActive = true;
         _cts = new CancellationTokenSource();
-        _ = Task.Run(async () =>
+        _task = Task.Run(async () =>
         {
             while (!_cts.IsCancellationRequested)
             {
@@ -41,7 +40,6 @@ public class PushQueue<T>
                 }
                 await Task.Delay(100);
             }
-            _completeStop?.TrySetResult(true);
         });
         await Task.CompletedTask;
     }
@@ -56,12 +54,23 @@ public class PushQueue<T>
             throw new MaxCacheCountOutOfRangeException($"缓存队列中的数量超出最大值，最大值为{MaxCacheCount}");
         _queue.Enqueue(t);
     }
+#if NET6_0_OR_GREATER
+    /// <summary>
+    /// 队列清理
+    /// </summary>
+    public void Clear()
+    {
+        _queue.Clear();
+    }
+#endif
+    /// <summary>
+    /// 停止队列
+    /// </summary>
     public async Task StopAsync()
     {
         if (!_isActive) return;
-        _completeStop = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         _cts?.Cancel();
-        await _completeStop.Task;
+        if (_task is not null) await _task;
         _isActive = false;
     }
 }
