@@ -48,5 +48,6 @@ public class AES : IDisposable
     public void Dispose()
     {
         _aes.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
