@@ -129,9 +129,11 @@ public static class CRC
                 }
             }
         }
-        byte[] ReturnData = new byte[2];
-        ReturnData[0] = CRC16Hi;       //CRC高位 
-        ReturnData[1] = CRC16Lo;       //CRC低位 
+        byte[] ReturnData =
+        [
+            CRC16Hi,       //CRC高位 
+            CRC16Lo,       //CRC低位 
+        ];
         return ReturnData;
     }
 
