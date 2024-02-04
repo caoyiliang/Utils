@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>8.0.3</Version>
+    <Version>8.0.4</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>修复转换时影响原值的行为</PackageReleaseNotes>
+    <PackageReleaseNotes>修复重试</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>

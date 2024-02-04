@@ -33,7 +33,8 @@ namespace UtilsUnitTest
         [TestMethod]
         public async Task TestReTry()
         {
-            await ProcessUtils.ReTry(async () => await TaskA(), 3, null);
+            var func = () => TaskA();
+            await func.ReTry(3);
         }
 
         private Task TaskA()
