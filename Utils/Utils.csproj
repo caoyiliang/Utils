@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>8.0.4</Version>
+    <Version>8.0.5</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>修复重试</PackageReleaseNotes>
+    <PackageReleaseNotes>直接使用接口名反射</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>

@@ -24,6 +24,25 @@ public static class PluginHelper
         return result;
     }
 
+    public static List<Type> GetChildren(string interfaceName, string? path = null)
+    {
+        var result = new List<Type>();
+        var pluginPath = FindPlugin(path ?? interfaceName);
+        foreach (string fileName in pluginPath)
+        {
+            Assembly asm = Assembly.LoadFrom(fileName);
+            Type[] t = asm.GetExportedTypes();
+            foreach (Type type in t)
+            {
+                if (type.GetInterface(interfaceName) != null)
+                {
+                    result.Add(type);
+                }
+            }
+        }
+        return result;
+    }
+
     public static object? CreateInstance(Type type, params object?[]? args)
     {
         return Activator.CreateInstance(type, args);
