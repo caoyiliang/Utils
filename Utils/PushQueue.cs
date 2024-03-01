@@ -18,6 +18,10 @@ public class PushQueue<T>
     /// </summary>
     public int MaxCacheCount { get; set; }
     /// <summary>
+    /// 队列循环时间
+    /// </summary>
+    public int DelayTime { get; set; } = 100;
+    /// <summary>
     /// 队列推出事件
     /// </summary>
     public event Func<T, Task>? OnPushData;
@@ -38,7 +42,7 @@ public class PushQueue<T>
                     if (OnPushData is not null)
                         await OnPushData(t);
                 }
-                await Task.Delay(100);
+                await Task.Delay(DelayTime);
             }
         });
         await Task.CompletedTask;
