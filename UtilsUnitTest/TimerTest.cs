@@ -14,6 +14,7 @@ namespace UtilsUnitTest
             await timer.StartAsync();
             await Task.Delay(5 * 60 * 1000);
         }
+
         [TestMethod]
         public async Task TestStopAsync()
         {

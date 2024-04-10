@@ -35,7 +35,7 @@ public static class StringByteUtils
         s = s.Replace(" ", "");
         byte[] buffer = new byte[s.Length / 2];
         for (int i = 0; i < s.Length; i += 2)
-            buffer[i / 2] = (byte)Convert.ToByte(s.Substring(i, 2), 16);
+            buffer[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
         return buffer;
     }
 
@@ -68,6 +68,7 @@ public static class StringByteUtils
         }
         return rs;
     }
+
     public static double ToDouble(byte[] value, int startIndex, bool isHighByteBefore = false)
     {
         var temp = value;
@@ -188,6 +189,7 @@ public static class StringByteUtils
         }
         return BitConverter.ToUInt64(temp, startIndex);
     }
+
     public static byte[] GetBytes(short value, bool isHighByteBefore = false)
     {
         if (isHighByteBefore)

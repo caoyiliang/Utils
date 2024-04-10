@@ -6,12 +6,12 @@
 /// <param name="maxDigitalValue">对应数值 最大值</param>
 public class SignalToDigitalProcessor(decimal minSignalValue, decimal maxSignalValue, decimal minDigitalValue, decimal maxDigitalValue)
 {
+    private readonly decimal _inputScaleFactor = (maxDigitalValue - minDigitalValue) / (maxSignalValue - minSignalValue);
+    private readonly decimal _outputScaleFactor = (maxSignalValue - minSignalValue) / (maxDigitalValue - minDigitalValue);
+
     public decimal InputDataProcess(decimal inputValue)
     {
-        return (maxDigitalValue - minDigitalValue)
-               / (maxSignalValue - minSignalValue)
-               * (inputValue - minSignalValue)
-               + minDigitalValue;
+        return _inputScaleFactor * (inputValue - minSignalValue) + minDigitalValue;
     }
 
     public decimal OutputDataProcess(decimal outputValue)
@@ -26,10 +26,7 @@ public class SignalToDigitalProcessor(decimal minSignalValue, decimal maxSignalV
         }
         else
         {
-            return (maxSignalValue - minSignalValue)
-                   / (maxDigitalValue - minDigitalValue)
-                   * (outputValue - minDigitalValue)
-                   + minSignalValue;
+            return _outputScaleFactor * (outputValue - minDigitalValue) + minSignalValue;
         }
     }
 }

@@ -1,33 +1,28 @@
 ﻿namespace Utils.Timer;
 
-public class Timer : ITimer
+/// <summary>
+/// 定时器
+/// </summary>
+/// <param name="averageTime"></param>
+/// <param name="offset"></param>
+public class Timer(AverageTime averageTime, int offset = 0) : ITimer
 {
-    private readonly int _minutes;
+    private readonly int _minutes = (int)averageTime;
     private Task? _work;
-    private TaskCompletionSource<bool>? _stop;
+    private CancellationTokenSource? _cts;
     private volatile bool _alive;
-    private readonly int _offset;
 
     public event Action<DateTime>? OnTime;
-    /// <summary>
-    /// 定时器
-    /// </summary>
-    /// <param name="averageTime"></param>
-    /// <param name="offset"></param>
-    public Timer(AverageTime averageTime, int offset = 0)
-    {
-        _minutes = (int)averageTime;
-        _offset = offset;
-    }
+
     public async Task StartAsync()
     {
         if (_alive) return;
         _alive = true;
-        _stop = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _cts = new CancellationTokenSource();
         var lastStartTime = DateTime.Now;
         _work = Task.Run(async () =>
         {
-            while (!_stop.Task.IsCompleted)
+            while (!_cts.Token.IsCancellationRequested)
             {
                 var now = DateTime.Now;
                 if (lastStartTime.Minute != now.Minute && now.Minute % _minutes == 0)
@@ -35,22 +30,45 @@ public class Timer : ITimer
                     lastStartTime = now;
                     _ = Task.Run(async () =>
                     {
-                        await Task.Delay(_offset);
-                        OnTime?.Invoke(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
-                    });
+                        try
+                        {
+                            await Task.Delay(offset, _cts.Token);
+                            OnTime?.Invoke(new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0));
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            // Ignore the exception if the task was cancelled
+                        }
+                    }, _cts.Token);
                 }
-                if (await Task.WhenAny(Task.Delay(900), _stop.Task) == _stop.Task) break;
+                try
+                {
+                    await Task.Delay(900, _cts.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    // Ignore the exception if the task was cancelled
+                }
             }
-        });
+        }, _cts.Token);
         await Task.CompletedTask;
     }
 
     public async Task StopAsync()
     {
         if (!_alive) return;
-        _stop?.TrySetResult(true);
-        if (_work is not null)
-            await _work;
+        _cts?.Cancel();
+        if (_work != null)
+        {
+            try
+            {
+                await _work;
+            }
+            catch (TaskCanceledException)
+            {
+                // Ignore the exception if the task was cancelled
+            }
+        }
         _alive = false;
     }
 }

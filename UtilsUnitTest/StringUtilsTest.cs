@@ -42,5 +42,37 @@ namespace UtilsUnitTest
             Debug.Write("A");
             throw new Exception();
         }
+
+        [TestMethod]
+        public async Task TestMD5()
+        {
+            var str = "123456";
+            var md5 = MD5.GetMD5Hash(str);
+            var result = MD5.VerifyMD5Hash(str, md5);
+            Assert.IsTrue(result);
+            await Task.CompletedTask;
+        }
+
+        [TestMethod]
+        public async Task TestCrc()
+        {
+            byte[] bytes = [0x01, 0x02, 0x03, 0x04, 0x05];
+            var data = Encoding.ASCII.GetBytes("01 02 03 04 05");
+            var crc16 = CRC.Crc16(bytes, bytes.Length);
+            var crc16_r = CRC.CRC16_R(bytes);
+            var updateCRC = CRC.UpdateCRC(bytes);
+            var gb = CRC.GBcrc16(data, data.Length);
+            var hb = CRC.HBcrc16(data, data.Length);
+            await Task.CompletedTask;
+        }
+
+        [TestMethod]
+        public async Task TestComibeByteArray()
+        {
+            byte[] a = [0x01, 0x02, 0x03];
+            byte[] b = [0x04, 0x05, 0x06];
+            var result = StringByteUtils.ComibeByteArray(a, b);
+            await Task.CompletedTask;
+        }
     }
 }

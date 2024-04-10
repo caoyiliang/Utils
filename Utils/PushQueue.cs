@@ -40,11 +40,14 @@ public class PushQueue<T>
                 if (_queue.TryDequeue(out var t))
                 {
                     if (OnPushData is not null)
-                        await OnPushData(t);
+                        await OnPushData.Invoke(t);
                 }
-                await Task.Delay(DelayTime);
+                else
+                {
+                    await Task.Delay(DelayTime, _cts.Token);
+                }
             }
-        });
+        }, _cts.Token);
         await Task.CompletedTask;
     }
     /// <summary>

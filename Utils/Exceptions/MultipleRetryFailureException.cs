@@ -14,6 +14,6 @@ namespace Utils.Exceptions
         /// <summary>多次重试失败</summary>
         public MultipleRetryFailureException(string message) : base(message) { }
         /// <summary>多次重试失败</summary>
-        public MultipleRetryFailureException(string message, Exception innerException) : base(message, innerException) { }
+        public MultipleRetryFailureException(string message, Exception? innerException) : base(message, innerException) { }
     }
 }

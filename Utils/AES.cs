@@ -24,11 +24,11 @@ public class AES : IDisposable
     /// <param name="data">明文（待加密）</param>
     public string Encrypt(string data)
     {
-        if (string.IsNullOrEmpty(data)) throw new ArgumentNullException();
+        if (string.IsNullOrEmpty(data)) throw new ArgumentNullException(nameof(data));
 
         var dataArray = Encoding.UTF8.GetBytes(data);
         var rs = _encryptor.TransformFinalBlock(dataArray, 0, dataArray.Length);
-        return Convert.ToBase64String(rs, 0, rs.Length);
+        return Convert.ToBase64String(rs);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class AES : IDisposable
     /// <returns></returns>
     public string Decrypt(string data)
     {
-        if (string.IsNullOrEmpty(data)) throw new ArgumentNullException();
+        if (string.IsNullOrEmpty(data)) throw new ArgumentNullException(nameof(data));
 
         var base64Data = Convert.FromBase64String(data);
         var rs = _decryptor.TransformFinalBlock(base64Data, 0, base64Data.Length);
@@ -47,7 +47,9 @@ public class AES : IDisposable
 
     public void Dispose()
     {
-        _aes.Dispose();
+        _encryptor?.Dispose();
+        _decryptor?.Dispose();
+        _aes?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

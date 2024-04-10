@@ -7,26 +7,26 @@ public class RemainBytes
     private int _currentMessageLength = -1;
 
     // 下一个写入字节的位置
-    private int NextIndex { get { return this.Count + StartIndex; } }
+    private int NextIndex => Count + StartIndex;
     // 剩余的可用大小
-    private int AvaliableSize { get { return this.Bytes.Length - this.Count - StartIndex; } }
+    private int AvaliableSize => Bytes.Length - Count - StartIndex;
 
-    public byte[] Bytes { get; set; } = new byte[DEFAULT_SIZE];
+    public byte[] Bytes { get; private set; } = new byte[DEFAULT_SIZE];
 
     /// <summary>
     /// Bytes的起始索引
     /// </summary>
-    public int StartIndex { get; set; }
+    public int StartIndex { get; private set; }
 
     /// <summary>
     /// Bytes有效字节的数量
     /// </summary>
-    public int Count { get; set; }
+    public int Count { get; private set; }
 
     /// <summary>
     /// Bytes的有效容量，该值可能大于Count
     /// </summary>
-    public int Capacity { get { return this.Bytes.Length - StartIndex; } }
+    public int Capacity => Bytes.Length - StartIndex;
 
     public void SetCurrentMessageLength(int length)
     {
@@ -49,25 +49,25 @@ public class RemainBytes
         if (_currentMessageLength != -1)
         {
             // 当当前消息的大小确定时，直接调整容量到指定大小
-            this.AddArrayCapacity(Math.Max(_currentMessageLength, this.Count + size));
+            AddArrayCapacity(Math.Max(_currentMessageLength, Count + size));
         }
         else
         {
             // 检查并调整容量
             if (AvaliableSize < size)
             {
-                this.AddArrayCapacity((int)((Capacity + size) * 1.5)); // 调整1.5倍
+                AddArrayCapacity((int)((Capacity + size) * 1.5)); // 调整1.5倍
             }
         }
         // 添加到Bytes中
-        Array.Copy(newBytes, startIndex, this.Bytes, NextIndex, size);
-        this.Count += size;
+        Array.Copy(newBytes, startIndex, Bytes, NextIndex, size);
+        Count += size;
     }
 
     public void RemoveHeader(int count)
     {
-        this.StartIndex += count;
-        this.Count -= count;
+        StartIndex += count;
+        Count -= count;
     }
 
     /// <summary>
@@ -76,15 +76,15 @@ public class RemainBytes
     /// <param name="newSize"></param>
     private void AddArrayCapacity(int newSize)
     {
-        if (newSize <= this.Capacity)
+        if (newSize <= Capacity)
             return;
-        this.ResizeArrayCapacity(newSize);
+        ResizeArrayCapacity(newSize);
     }
 
     private void ResizeArrayCapacity(int newSize)
     {
         var tmp = new byte[newSize];
-        Array.Copy(this.Bytes, StartIndex, tmp, 0, this.Count);
+        Array.Copy(Bytes, StartIndex, tmp, 0, Count);
         Bytes = tmp;
         StartIndex = 0;
     }
