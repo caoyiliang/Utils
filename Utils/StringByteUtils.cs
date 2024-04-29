@@ -69,6 +69,20 @@ public static class StringByteUtils
         return rs;
     }
 
+    public static bool ValueEqual(this byte[]? array1, byte[]? array2)
+    {
+        if (array1 == null && array2 == null)
+            return true;
+
+        if (array1 == null || array2 == null)
+            return false;
+
+        if (array1.Length != array2.Length)
+            return false;
+
+        return array1.SequenceEqual(array2);
+    }
+
     public static double ToDouble(byte[] value, int startIndex, bool isHighByteBefore = false)
     {
         var temp = value;

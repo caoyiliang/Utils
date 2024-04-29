@@ -74,5 +74,15 @@ namespace UtilsUnitTest
             var result = StringByteUtils.ComibeByteArray(a, b);
             await Task.CompletedTask;
         }
+
+        [TestMethod]
+        public async Task TestValueEqual()
+        {
+            byte[]? a = null;
+            byte[]? b = null;
+            var result = a.ValueEqual(b);
+            Assert.IsTrue(result);
+            await Task.CompletedTask;
+        }
     }
 }
