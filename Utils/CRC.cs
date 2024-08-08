@@ -37,7 +37,7 @@ public static class CRC
 
     public static byte[] Crc16(byte[] data)
     {
-        return [.. data, .. ComputeCrc16(data, data.Length, 0xA001, false)];
+        return [.. data, .. ComputeCrc16(data, data.Length, 0xA001)];
     }
 
     public static byte[] CRC16_R(byte[] data)
