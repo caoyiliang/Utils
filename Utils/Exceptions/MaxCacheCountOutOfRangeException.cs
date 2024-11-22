@@ -16,9 +16,5 @@ namespace Utils.Exceptions
         public MaxCacheCountOutOfRangeException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        protected MaxCacheCountOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

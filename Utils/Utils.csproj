@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+	<TargetFrameworks>netstandard2.0;net6.0;net8.0;net9.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>8.0.9</Version>
+    <Version>9.0.0</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>添加bytes值对比</PackageReleaseNotes>
+    <PackageReleaseNotes>更新目标框架，添加清理方法，删除无用构造函数</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>

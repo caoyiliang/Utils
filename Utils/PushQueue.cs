@@ -61,15 +61,19 @@ public class PushQueue<T>
             throw new MaxCacheCountOutOfRangeException($"缓存队列中的数量超出最大值，最大值为{MaxCacheCount}");
         _queue.Enqueue(t);
     }
-#if NET6_0_OR_GREATER
+
     /// <summary>
     /// 队列清理
     /// </summary>
     public void Clear()
     {
+#if NET6_0_OR_GREATER
         _queue.Clear();
-    }
+#else
+        while (_queue.TryDequeue(out _)) ;
 #endif
+    }
+
     /// <summary>
     /// 停止队列
     /// </summary>
