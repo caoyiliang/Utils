@@ -22,7 +22,7 @@ namespace UtilsUnitTest
 
             for (int i = 0; i < 10; i++)
             {
-                pushQueue.PutInData(i);
+                await pushQueue.PutInDataAsync(i);
             }
             // 启动队列
             await pushQueue.StartAsync();
