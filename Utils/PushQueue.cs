@@ -30,7 +30,7 @@ public class PushQueue<T>
         if (_isActive) return;
         _isActive = true;
         _cts = new CancellationTokenSource();
-        _task = Task.Run(ProcessQueueAsync, _cts.Token);
+        _task = Task.Run(ProcessQueueAsync);
         await Task.CompletedTask;
     }
 
