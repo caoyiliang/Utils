@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;net6.0;net8.0;net9.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>9.1.3</Version>
+    <Version>9.1.4</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>更改队列实现</PackageReleaseNotes>
+    <PackageReleaseNotes>更新依赖</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="9.0.1" />
+    <PackageReference Include="System.Threading.Channels" Version="9.0.2" />
   </ItemGroup>
 
 </Project>
