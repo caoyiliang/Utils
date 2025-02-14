@@ -7,9 +7,9 @@ namespace Utils;
 /// 队列
 /// </summary>
 /// <typeparam name="T">队列类型</typeparam>
-public class PushQueue<T>
+public class PushQueue<T>(bool singleWriter = true)
 {
-    private readonly Channel<T> _channel = Channel.CreateUnbounded<T>();
+    private readonly Channel<T> _channel = Channel.CreateUnbounded<T>(new UnboundedChannelOptions() { SingleWriter = singleWriter });
     private volatile bool _isActive = false;
     private Task? _task;
     private CancellationTokenSource? _cts;
