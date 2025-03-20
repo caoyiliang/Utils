@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Net.Sockets;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Web;
 
@@ -78,5 +80,27 @@ public static class StringUtils
         sb.Remove(sb.Length - 1, 1);
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// 主机名解析
+    /// </summary>
+    /// <exception cref="ArgumentException">DNS 解析失败</exception>
+    public static async Task<IPAddress> ResolveHostAsync(this string hostOrIp)
+    {
+        if (IPAddress.TryParse(hostOrIp, out var ipAddress))
+        {
+            return ipAddress;
+        }
+
+        try
+        {
+            var hostEntry = await Dns.GetHostEntryAsync(hostOrIp);
+            return hostEntry.AddressList[0]; // 取第一个可用地址
+        }
+        catch (SocketException ex)
+        {
+            throw new ArgumentException($"DNS 解析失败: {ex.Message}", nameof(hostOrIp));
+        }
     }
 }
