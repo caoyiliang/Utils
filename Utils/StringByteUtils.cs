@@ -32,7 +32,7 @@ public static class StringByteUtils
 
     public static byte[] StringToBytes(string s)
     {
-        s = s.Replace(" ", "");
+        s = s.Replace("0x", "").Replace(" ", "");
         byte[] buffer = new byte[s.Length / 2];
         for (int i = 0; i < s.Length; i += 2)
             buffer[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);

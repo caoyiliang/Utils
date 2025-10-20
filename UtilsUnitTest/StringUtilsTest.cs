@@ -84,5 +84,14 @@ namespace UtilsUnitTest
             Assert.IsTrue(result);
             await Task.CompletedTask;
         }
+
+        [TestMethod]
+        public async Task TestStringToBytes()
+        {
+            string s = "0x08000000";
+            var bytes = StringByteUtils.StringToBytes(s);
+            Assert.AreEqual(4, bytes.Length);
+            await Task.CompletedTask;
+        }
     }
 }
