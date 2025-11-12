@@ -90,7 +90,7 @@ namespace UtilsUnitTest
         {
             string s = "0x08000000";
             var bytes = StringByteUtils.StringToBytes(s);
-            Assert.AreEqual(4, bytes.Length);
+            Assert.HasCount(4, bytes);
             await Task.CompletedTask;
         }
     }

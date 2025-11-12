@@ -39,7 +39,7 @@ namespace UtilsUnitTest
             await Task.Delay(15000);
 
             // 验证
-            Assert.IsTrue(count == 10, "队列在停止后再次启动，应能正常处理数据。");
+            Assert.AreEqual(10, count, "队列在停止后再次启动，应能正常处理数据。");
         }
     }
 }
