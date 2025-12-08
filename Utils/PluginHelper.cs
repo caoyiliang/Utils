@@ -35,6 +35,25 @@ public static class PluginHelper
         return result;
     }
 
+    public static Type? GetType(string fullName, string? path = null)
+    {
+        var pluginPath = FindPlugin(path ?? fullName);
+        var result = new List<Type>();
+        foreach (string fileName in pluginPath)
+        {
+            Assembly asm = Assembly.LoadFrom(fileName);
+            Type[] t = asm.GetExportedTypes();
+            foreach (Type type in t)
+            {
+                if (type.FullName == fullName)
+                {
+                    return type;
+                }
+            }
+        }
+        return null;
+    }
+
     public static object? CreateInstance(Type type, params object?[]? args)
     {
         return Activator.CreateInstance(type, args);
