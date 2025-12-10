@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>10.0.1</Version>
+    <Version>10.0.2</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>新增反射支持</PackageReleaseNotes>
+    <PackageReleaseNotes>依赖更新</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="10.0.0" />
+    <PackageReference Include="System.Threading.Channels" Version="10.0.1" />
   </ItemGroup>
 
 </Project>
