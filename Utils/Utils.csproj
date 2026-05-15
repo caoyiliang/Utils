@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>10.0.4</Version>
+    <Version>10.0.5</Version>
     <Description>公共工具库</Description>
-    <PackageReleaseNotes>依赖更新</PackageReleaseNotes>
+    <PackageReleaseNotes>增强参数校验与防御性编程；修复多处空引用、越界、竞态条件风险；AES 线程安全修复；Timer 适配系统时间变更；PushQueue 生命周期同步保护；.NET 5+ 性能优化</PackageReleaseNotes>
     <PackageTags></PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>CSoft.Utils</PackageId>
@@ -36,7 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="10.0.5" />
+    <PackageReference Include="System.Memory" Version="4.6.3" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Threading.Channels" Version="10.0.8" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
 
 </Project>

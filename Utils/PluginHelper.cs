@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Utils;
 
@@ -22,14 +22,25 @@ public static class PluginHelper
         var result = new List<Type>();
         foreach (string fileName in pluginPath)
         {
-            Assembly asm = Assembly.LoadFrom(fileName);
-            Type[] t = asm.GetExportedTypes();
-            foreach (Type type in t)
+            try
             {
-                if (type.GetInterface(interfaceName) != null)
+                Assembly asm = Assembly.LoadFrom(fileName);
+                Type[] t = asm.GetExportedTypes();
+                foreach (Type type in t)
                 {
-                    result.Add(type);
+                    if (type.GetInterface(interfaceName) != null)
+                    {
+                        result.Add(type);
+                    }
                 }
+            }
+            catch (BadImageFormatException)
+            {
+                // 非托管 DLL 或格式不正确，跳过
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                // 类型加载失败，跳过
             }
         }
         return result;
@@ -38,17 +49,25 @@ public static class PluginHelper
     public static Type? GetType(string fullName, string? path = null)
     {
         var pluginPath = FindPlugin(path ?? fullName);
-        var result = new List<Type>();
         foreach (string fileName in pluginPath)
         {
-            Assembly asm = Assembly.LoadFrom(fileName);
-            Type[] t = asm.GetExportedTypes();
-            foreach (Type type in t)
+            try
             {
-                if (type.FullName == fullName)
+                Assembly asm = Assembly.LoadFrom(fileName);
+                Type[] t = asm.GetExportedTypes();
+                foreach (Type type in t)
                 {
-                    return type;
+                    if (type.FullName == fullName)
+                    {
+                        return type;
+                    }
                 }
+            }
+            catch (BadImageFormatException)
+            {
+            }
+            catch (ReflectionTypeLoadException)
+            {
             }
         }
         return null;
@@ -62,6 +81,10 @@ public static class PluginHelper
     private static List<string> FindPlugin(string pluginName)
     {
         var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", pluginName);
+        if (!Directory.Exists(path))
+        {
+            return [];
+        }
         return [.. Directory.GetFiles(path, "*.dll")];
     }
 }

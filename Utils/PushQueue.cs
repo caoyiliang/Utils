@@ -1,4 +1,4 @@
-﻿using System.Threading.Channels;
+using System.Threading.Channels;
 using Utils.Exceptions;
 
 namespace Utils;
@@ -10,13 +10,17 @@ namespace Utils;
 public class PushQueue<T>(bool singleWriter = true)
 {
     private readonly Channel<T> _channel = Channel.CreateUnbounded<T>(new UnboundedChannelOptions() { SingleWriter = singleWriter });
+    private readonly object _countLock = new();
+    private readonly object _lifecycleLock = new();
     private volatile bool _isActive = false;
     private Task? _task;
     private CancellationTokenSource? _cts;
+
     /// <summary>
     /// 最大缓存的数量
     /// </summary>
     public int MaxCacheCount { get; set; }
+
     /// <summary>
     /// 队列推出事件
     /// </summary>
@@ -25,13 +29,16 @@ public class PushQueue<T>(bool singleWriter = true)
     /// <summary>
     /// 启动队列
     /// </summary>
-    public async Task StartAsync()
+    public Task StartAsync()
     {
-        if (_isActive) return;
-        _isActive = true;
-        _cts = new CancellationTokenSource();
-        _task = Task.Run(ProcessQueueAsync);
-        await Task.CompletedTask;
+        lock (_lifecycleLock)
+        {
+            if (_isActive) return Task.CompletedTask;
+            _isActive = true;
+            _cts = new CancellationTokenSource();
+            _task = Task.Run(ProcessQueueAsync);
+            return Task.CompletedTask;
+        }
     }
 
     private async Task ProcessQueueAsync()
@@ -40,8 +47,15 @@ public class PushQueue<T>(bool singleWriter = true)
         {
             await foreach (var data in _channel.Reader.ReadAllAsync(_cts!.Token))
             {
-                if (OnPushData is not null)
+                if (OnPushData is null) continue;
+                try
+                {
                     await OnPushData.Invoke(data);
+                }
+                catch
+                {
+                    // 事件处理异常不应导致队列崩溃
+                }
             }
         }
         catch (OperationCanceledException)
@@ -57,8 +71,14 @@ public class PushQueue<T>(bool singleWriter = true)
     /// <exception cref="MaxCacheCountOutOfRangeException"></exception>
     public async Task PutInDataAsync(T t)
     {
-        if (_channel.Reader.Count > MaxCacheCount)
-            throw new MaxCacheCountOutOfRangeException($"缓存队列中的数量超出最大值，最大值为{MaxCacheCount}");
+        if (MaxCacheCount > 0)
+        {
+            lock (_countLock)
+            {
+                if (_channel.Reader.Count >= MaxCacheCount)
+                    throw new MaxCacheCountOutOfRangeException($"缓存队列中的数量超出最大值，最大值为{MaxCacheCount}");
+            }
+        }
         await _channel.Writer.WriteAsync(t);
     }
 
@@ -75,9 +95,29 @@ public class PushQueue<T>(bool singleWriter = true)
     /// </summary>
     public async Task StopAsync()
     {
-        if (!_isActive) return;
-        _cts?.Cancel();
-        if (_task is not null) await _task;
-        _isActive = false;
+        lock (_lifecycleLock)
+        {
+            if (!_isActive) return;
+            _cts?.Cancel();
+        }
+        if (_task != null)
+        {
+            try
+            {
+                await _task;
+            }
+            catch (OperationCanceledException)
+            {
+                // ignored
+            }
+            catch
+            {
+                // 防止事件处理异常导致 StopAsync 抛异常
+            }
+        }
+        lock (_lifecycleLock)
+        {
+            _isActive = false;
+        }
     }
 }

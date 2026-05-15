@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+using System.Globalization;
+using System.Net.Sockets;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -10,11 +11,12 @@ public static class StringUtils
 {
     public static List<decimal> GetAllNum(this string str)
     {
+        if (str is null) throw new ArgumentNullException(nameof(str));
         var result = new List<decimal>();
         var stringBuilder = new StringBuilder();
         foreach (var item in str)
         {
-            if (item.LsNum())
+            if (item.IsDigitOrDot())
             {
                 stringBuilder.Append(item);
             }
@@ -22,7 +24,9 @@ public static class StringUtils
             {
                 if (stringBuilder.Length > 0)
                 {
-                    result.Add(decimal.Parse(stringBuilder.ToString()));
+                    var token = stringBuilder.ToString();
+                    if (decimal.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var num))
+                        result.Add(num);
                     stringBuilder.Clear();
                 }
                 stringBuilder.Append(item);
@@ -31,42 +35,52 @@ public static class StringUtils
             {
                 if (stringBuilder.Length > 0)
                 {
-                    result.Add(decimal.Parse(stringBuilder.ToString()));
+                    var token = stringBuilder.ToString();
+                    if (decimal.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var num))
+                        result.Add(num);
                     stringBuilder.Clear();
                 }
             }
         }
         if (stringBuilder.Length > 0)
         {
-            result.Add(decimal.Parse(stringBuilder.ToString()));
+            var token = stringBuilder.ToString();
+            if (decimal.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var num))
+                result.Add(num);
             stringBuilder.Clear();
         }
         return result;
     }
-    private static bool LsNum(this char c)
+
+    private static bool IsDigitOrDot(this char c)
     {
-        return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '.';
+        return char.IsDigit(c) || c == '.';
     }
+
     public static bool IsNegative(this char c)
     {
         return c == '-';
     }
 
-    /// <summary>
-    /// 类转Uri参数
-    /// </summary>
+    /// <summary>类转Uri参数</summary>
     /// <param name="obj">类</param>
     /// <param name="sort">排序</param>
     /// <param name="url">地址</param>
     /// <param name="urlEncode">是否转UrlString</param>
     public static string ModelToUriParam(this object obj, bool sort = true, string url = "", bool urlEncode = false)
     {
-        PropertyInfo[] propertis = obj.GetType().GetProperties();
+        if (obj is null) throw new ArgumentNullException(nameof(obj));
+        PropertyInfo[] properties = obj.GetType().GetProperties();
+        if (properties.Length == 0)
+        {
+            return url;
+        }
         var sb = new StringBuilder();
         sb.Append(url);
         if (url != "") sb.Append('?');
-        if (sort) propertis = propertis.OrderBy(x => x.Name).ToArray();
-        foreach (var p in propertis)
+        if (sort) properties = properties.OrderBy(x => x.Name).ToArray();
+        int added = 0;
+        foreach (var p in properties)
         {
             var v = p.GetValue(obj, null);
             if (v == null)
@@ -74,17 +88,20 @@ public static class StringUtils
 
             sb.Append(p.Name);
             sb.Append('=');
-            sb.Append(urlEncode ? HttpUtility.UrlEncode(v.ToString()) : v.ToString());
+            var vs = v.ToString() ?? string.Empty;
+            sb.Append(urlEncode ? HttpUtility.UrlEncode(vs) : vs);
             sb.Append('&');
+            added++;
         }
-        sb.Remove(sb.Length - 1, 1);
+        if (added > 0)
+        {
+            sb.Remove(sb.Length - 1, 1);
+        }
 
         return sb.ToString();
     }
 
-    /// <summary>
-    /// 主机名解析
-    /// </summary>
+    /// <summary>主机名解析</summary>
     /// <exception cref="ArgumentException">DNS 解析失败</exception>
     public static async Task<IPAddress> ResolveHostAsync(this string hostOrIp)
     {
@@ -96,11 +113,13 @@ public static class StringUtils
         try
         {
             var hostEntry = await Dns.GetHostEntryAsync(hostOrIp);
-            return hostEntry.AddressList[0]; // 取第一个可用地址
+            if (hostEntry.AddressList.Length == 0)
+                throw new InvalidOperationException($"DNS 解析成功但无可用地址: {hostOrIp}");
+            return hostEntry.AddressList[0];
         }
         catch (SocketException ex)
         {
-            throw new ArgumentException($"DNS 解析失败: {ex.Message}", nameof(hostOrIp));
+            throw new InvalidOperationException($"DNS 解析失败: {ex.Message}", ex);
         }
     }
 }

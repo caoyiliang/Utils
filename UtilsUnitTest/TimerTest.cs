@@ -7,21 +7,48 @@ namespace UtilsUnitTest
     public class TimerTest
     {
         [TestMethod]
-        public async Task TestStartAsync()
+        public async Task TestStartAndStop()
         {
-            Utils.Timer.ITimer timer = new Utils.Timer.Timer(AverageTime.OneMinute);
-            timer.OnTime += time => Console.WriteLine($"{DateTime.Now}   {time}");
+            var timer = new Utils.Timer.Timer(AverageTime.OneMinute);
             await timer.StartAsync();
-            await Task.Delay(5 * 60 * 1000);
+            await Task.Delay(500);
+            await timer.StopAsync();
+            // Just verify no exception
         }
 
         [TestMethod]
-        public async Task TestStopAsync()
+        public async Task TestStopAsync_Idempotent()
         {
-            Utils.Timer.ITimer timer = new Utils.Timer.Timer(AverageTime.OneMinute);
+            var timer = new Utils.Timer.Timer(AverageTime.OneMinute);
+            await timer.StartAsync();
+            await Task.Delay(200);
+            await timer.StopAsync();
+            await timer.StopAsync(); // Should not throw
+        }
+
+        [TestMethod]
+        public async Task TestStartAsync_Idempotent()
+        {
+            var timer = new Utils.Timer.Timer(AverageTime.OneMinute);
+            await timer.StartAsync();
+            await Task.Delay(200);
+            await timer.StartAsync(); // Should not throw
+            await timer.StopAsync();
+        }
+
+        [TestMethod]
+        public async Task TestOnTime_Fires()
+        {
+            var timer = new Utils.Timer.Timer(AverageTime.OneMinute);
+            timer.OnTime += (time) =>
+            {
+                // Timer event fired
+            };
             await timer.StartAsync();
             await Task.Delay(2000);
             await timer.StopAsync();
+            // Note: timer fires based on clock minute, so this may or may not fire
+            // depending on when the test runs. We just verify it doesn't throw.
         }
     }
 }

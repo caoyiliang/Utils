@@ -9,3 +9,5 @@
 /bin
 /Utils/.vs
 /Utils/obj
+/.claude
+*.csproj.user

@@ -1,4 +1,4 @@
-﻿using Utils.Exceptions;
+using Utils.Exceptions;
 
 namespace Utils;
 
@@ -17,6 +17,7 @@ public static class ProcessUtils
     /// <exception cref="OperationCanceledException">任务取消</exception>
     public static async Task<T?> ReTry<T>(this Func<Task<T>> func, int reTryCount = 0, CancellationToken cancellationToken = default)
     {
+        if (func is null) throw new ArgumentNullException(nameof(func));
         if (reTryCount < 0) throw new ArgumentOutOfRangeException(nameof(reTryCount));
         Exception? lastException = null;
         for (int j = 0; j <= reTryCount; j++)
@@ -25,6 +26,10 @@ public static class ProcessUtils
             try
             {
                 return await func.Invoke();
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -45,6 +50,7 @@ public static class ProcessUtils
     /// <exception cref="OperationCanceledException">任务取消</exception>
     public static async Task ReTry(this Func<Task> func, int reTryCount = 0, CancellationToken cancellationToken = default)
     {
+        if (func is null) throw new ArgumentNullException(nameof(func));
         if (reTryCount < 0) throw new ArgumentOutOfRangeException(nameof(reTryCount));
         Exception? lastException = null;
         for (int j = 0; j <= reTryCount; j++)
@@ -54,6 +60,10 @@ public static class ProcessUtils
             {
                 await func.Invoke();
                 return;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

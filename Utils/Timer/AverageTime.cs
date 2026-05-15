@@ -2,7 +2,7 @@
 
 public enum AverageTime : int
 {
-    Unknow = 0,
+    Unknown = 0,
     OneMinute = 1,
     FiveMinutes = 5,
     TenMinutes = 10,

@@ -1,23 +1,25 @@
-﻿namespace Utils;
+namespace Utils;
 
 public static class CRC
 {
-    private static byte[] ComputeCrc16(byte[] data, int len, int xdapoly, bool Crc16 = true)
+    private static byte[] ComputeCrc16(byte[] data, int len, int xdapoly, bool crc16 = true)
     {
-        int xda, i, j, xdabit;
-        xda = 0xFFFF;
-        for (i = 0; i < len; i++)
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        if (len < 0 || len > data.Length) throw new ArgumentOutOfRangeException(nameof(len));
+
+        int xda = 0xFFFF;
+        for (int i = 0; i < len; i++)
         {
-            xda = (xda >> (Crc16 ? 0 : 8)) ^ data[i];
-            for (j = 0; j < 8; j++)
+            xda = (xda >> (crc16 ? 0 : 8)) ^ data[i];
+            for (int j = 0; j < 8; j++)
             {
-                xdabit = xda & 0x01;
+                int xdabit = xda & 0x01;
                 xda >>= 1;
                 if (xdabit == 1)
                     xda ^= xdapoly;
             }
         }
-        return Crc16 ? [(byte)(xda & 0xFF), (byte)(xda >> 8)] : [(byte)(xda >> 8), (byte)(xda & 0xFF)];
+        return crc16 ? [(byte)(xda & 0xFF), (byte)(xda >> 8)] : [(byte)(xda >> 8), (byte)(xda & 0xFF)];
     }
 
     public static byte[] Crc16(byte[] data, int len)
@@ -37,11 +39,13 @@ public static class CRC
 
     public static byte[] Crc16(byte[] data)
     {
+        if (data is null) throw new ArgumentNullException(nameof(data));
         return [.. data, .. ComputeCrc16(data, data.Length, 0xA001)];
     }
 
     public static byte[] CRC16_R(byte[] data)
     {
+        if (data is null) throw new ArgumentNullException(nameof(data));
         var crc = Crc16(data, data.Length);
         Array.Reverse(crc);
         return crc;
@@ -49,6 +53,11 @@ public static class CRC
 
     public static ushort UpdateCRC(byte[] input, int length)
     {
+        if (input == null)
+            throw new ArgumentNullException(nameof(input));
+        if (length < 0 || length > input.Length)
+            throw new ArgumentOutOfRangeException(nameof(length));
+
         ushort crc = 0xFFFF;
         for (int j = 0; j < length; j++)
         {

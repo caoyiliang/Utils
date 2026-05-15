@@ -1,4 +1,4 @@
-﻿namespace Utils;
+namespace Utils;
 
 public class RemainBytes
 {
@@ -46,6 +46,12 @@ public class RemainBytes
     /// <param name="size"></param>
     public void Append(byte[] newBytes, int startIndex, int size)
     {
+        if (newBytes is null) throw new ArgumentNullException(nameof(newBytes));
+        if (startIndex < 0 || startIndex > newBytes.Length)
+            throw new ArgumentOutOfRangeException(nameof(startIndex));
+        if (size < 0 || startIndex + size > newBytes.Length)
+            throw new ArgumentOutOfRangeException(nameof(size));
+
         if (_currentMessageLength != -1)
         {
             // 当当前消息的大小确定时，直接调整容量到指定大小
@@ -66,6 +72,10 @@ public class RemainBytes
 
     public void RemoveHeader(int count)
     {
+        if (count < 0)
+            throw new ArgumentOutOfRangeException(nameof(count));
+        if (count > Count)
+            throw new ArgumentOutOfRangeException(nameof(count), "移除长度超出有效数据范围");
         StartIndex += count;
         Count -= count;
     }
